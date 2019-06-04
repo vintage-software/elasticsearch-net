@@ -115,30 +115,30 @@ namespace Nest
 
 		public GeoCentroidAggregate GeoCentroid(string key) => this.TryGet<GeoCentroidAggregate>(key);
 
-		public SignificantTermsAggregate SignificantTerms(string key)
+		public SignificantTermsAggregate<TKey> SignificantTerms<TKey>(string key)
 		{
 			var bucket = this.TryGet<BucketAggregate>(key);
 			return bucket == null
 				? null
-				: new SignificantTermsAggregate
+				: new SignificantTermsAggregate<TKey>
 				{
 					BgCount = bucket.BgCount,
 					DocCount = bucket.DocCount,
-					Buckets = bucket.Items.OfType<SignificantTermsBucket>().ToList(),
+					Buckets = GetSignificantTermsBuckets<TKey>(bucket.Items).ToList(),
 					Meta = bucket.Meta
 				};
 		}
 
-		public SignificantTermsAggregate SignificantText(string key)
+		public SignificantTermsAggregate<TKey> SignificantText<TKey>(string key)
 		{
 			var bucket = this.TryGet<BucketAggregate>(key);
 			return bucket == null
 				? null
-				: new SignificantTermsAggregate
+				: new SignificantTermsAggregate<TKey>
 				{
 					BgCount = bucket.BgCount,
 					DocCount = bucket.DocCount,
-					Buckets = bucket.Items.OfType<SignificantTermsBucket>().ToList(),
+					Buckets = GetSignificantTermsBuckets<TKey>(bucket.Items).ToList(),
 					Meta = bucket.Meta
 				};
 		}
@@ -223,5 +223,20 @@ namespace Nest
 			}
 		}
 
+		private IEnumerable<SignificantTermsBucket<TKey>> GetSignificantTermsBuckets<TKey>(IEnumerable<IBucket> items)
+		{
+			var buckets = items.Cast<SignificantTermsBucket<object>>();
+
+			foreach (var bucket in buckets)
+			{
+				yield return new SignificantTermsBucket<TKey>(bucket.BackingDictionary)
+				{
+					Key = (TKey)Convert.ChangeType(bucket.Key, typeof(TKey)),
+					DocCount = bucket.DocCount,
+					BgCount = bucket.BgCount,
+					Score = bucket.Score
+				};
+			}
+		}
 	}
 }

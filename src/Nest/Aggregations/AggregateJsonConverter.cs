@@ -731,9 +731,9 @@ namespace Nest
 			var bgCount = reader.Value as long?;
 			reader.Read();
 			var nestedAggregations = this.GetSubAggregates(reader, serializer);
-			var significantTermItem = new SignificantTermsBucket(nestedAggregations)
+			var significantTermItem = new SignificantTermsBucket<object>(nestedAggregations)
 			{
-				Key = key as string,
+				Key = key,
 				DocCount = docCount.GetValueOrDefault(0),
 				BgCount = bgCount.GetValueOrDefault(0),
 				Score = score.GetValueOrDefault(0)

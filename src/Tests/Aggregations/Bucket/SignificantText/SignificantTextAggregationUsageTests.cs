@@ -81,7 +81,7 @@ namespace Tests.Aggregations.Bucket.SignificantText
 		protected override void ExpectResponse(ISearchResponse<Project> response)
 		{
 			response.ShouldBeValid();
-			var sigNames = response.Aggregations.SignificantText("significant_descriptions");
+			var sigNames = response.Aggregations.SignificantText<string>("significant_descriptions");
 			sigNames.Should().NotBeNull();
 			sigNames.DocCount.Should().BeGreaterThan(0);
 			foreach (var bucket in sigNames.Buckets)

@@ -67,7 +67,7 @@ namespace Tests.Aggregations.Bucket.SignificantTerms
 		protected override void ExpectResponse(ISearchResponse<Project> response)
 		{
 			response.ShouldBeValid();
-			var sigNames = response.Aggregations.SignificantTerms("significant_names");
+			var sigNames = response.Aggregations.SignificantTerms<string>("significant_names");
 			sigNames.Should().NotBeNull();
 			sigNames.DocCount.Should().BeGreaterThan(0);
 		}
@@ -129,7 +129,7 @@ namespace Tests.Aggregations.Bucket.SignificantTerms
 		protected override void ExpectResponse(ISearchResponse<Project> response)
 		{
 			response.ShouldBeValid();
-			var sigNames = response.Aggregations.SignificantTerms("significant_names");
+			var sigNames = response.Aggregations.SignificantTerms<string>("significant_names");
 			sigNames.Should().NotBeNull();
 			sigNames.DocCount.Should().BeGreaterThan(0);
 		}
@@ -191,7 +191,7 @@ namespace Tests.Aggregations.Bucket.SignificantTerms
 		protected override void ExpectResponse(ISearchResponse<Project> response)
 		{
 			response.ShouldBeValid();
-			var sigNames = response.Aggregations.SignificantTerms("significant_names");
+			var sigNames = response.Aggregations.SignificantTerms<string>("significant_names");
 			sigNames.Should().NotBeNull();
 			sigNames.DocCount.Should().BeGreaterThan(0);
 		}
